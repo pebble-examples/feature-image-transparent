@@ -45,16 +45,17 @@ static void main_window_load(Window *window) {
       "monium pandamonium p\n"
       "andamonium pandamoni\n");
   layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
-
+#ifdef PBL_ROUND
+  text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
+  text_layer_enable_screen_text_flow_and_paging(s_text_layer, 2);
+#endif
   s_white_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PANDA_WHITE);
   s_black_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PANDA_BLACK);
 
   GPoint center = grect_center_point(&bounds);
-#ifdef PBL_PLATFORM_BASALT
+
   GSize image_size = gbitmap_get_bounds(s_white_bitmap).size;
-#else
-  GSize image_size = s_white_bitmap->bounds.size;
-#endif
+
   GRect image_frame = GRect(center.x, center.y, image_size.w, image_size.h);
   image_frame.origin.x -= image_size.w / 2;
   image_frame.origin.y -= image_size.h / 2;
