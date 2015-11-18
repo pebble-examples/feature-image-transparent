@@ -12,7 +12,7 @@
   "resources": {
     "media": [
       {
-        "type": "png-trans",
+        "type": "png",
         "name": "IMAGE_PANDA",
         "file": "images/panda.png"
       }
