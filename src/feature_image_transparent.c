@@ -1,16 +1,3 @@
-/*
- * Demonstrate how to display an image with black, white and transparent sections.
- *
- * To achieve this effect you used to need to use GCompOp with two bitmaps: one is 
- * black and transparent, the other is white and transparent. Now you can simply use
- * GCompOpSet with a png resource to display a transparent image!
- *
- * The demonstration image is a modified version of the following SVG
- * exported from Inkscape:
- *
- * <http://openclipart.org/detail/48919/panda-with-bamboo-leaves-by-adam_lowe>
- */
-
 #include "pebble.h"
 
 static Window *s_main_window;
