@@ -1,25 +1,9 @@
-/*
- * Demonstrate how to display an image with black, white and transparent sections.
- *
- * To achieve this effect you need to use GCompOp with two bitmaps: one is black
- * and transparent, the other is white and transparent.
- *
- * The two bitmaps are created during the build process from a RGBA format PNG file.
- *
- * The image can also be rotated at runtime.
- *
- * The demonstration image is a modified version of the following SVG
- * exported from Inkscape:
- *
- * <http://openclipart.org/detail/48919/panda-with-bamboo-leaves-by-adam_lowe>
- */
-
 #include "pebble.h"
 
 static Window *s_main_window;
 static TextLayer *s_text_layer;
-static GBitmap *s_white_bitmap, *s_black_bitmap;
-static BitmapLayer *s_white_layer, *s_black_layer;
+static GBitmap *s_bitmap;
+static BitmapLayer *s_layer;
 
 static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
@@ -49,36 +33,27 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
   text_layer_enable_screen_text_flow_and_paging(s_text_layer, 2);
 #endif
-  s_white_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PANDA_WHITE);
-  s_black_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PANDA_BLACK);
+  s_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_PANDA);
 
   GPoint center = grect_center_point(&bounds);
 
-  GSize image_size = gbitmap_get_bounds(s_white_bitmap).size;
+  GSize image_size = gbitmap_get_bounds(s_bitmap).size;
 
   GRect image_frame = GRect(center.x, center.y, image_size.w, image_size.h);
   image_frame.origin.x -= image_size.w / 2;
   image_frame.origin.y -= image_size.h / 2;
 
   // Use GCompOpOr to display the white portions of the image
-  s_white_layer = bitmap_layer_create(image_frame);
-  bitmap_layer_set_bitmap(s_white_layer, s_white_bitmap);
-  bitmap_layer_set_compositing_mode(s_white_layer, GCompOpOr);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_white_layer));
-
-  // Use GCompOpClear to display the black portions of the image
-  s_black_layer = bitmap_layer_create(image_frame);
-  bitmap_layer_set_bitmap(s_black_layer, s_black_bitmap);
-  bitmap_layer_set_compositing_mode(s_black_layer, GCompOpClear);
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_black_layer));
+  s_layer = bitmap_layer_create(image_frame);
+  bitmap_layer_set_bitmap(s_layer, s_bitmap);
+  bitmap_layer_set_compositing_mode(s_layer, GCompOpSet);
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_layer));
 }
 
 static void main_window_unload(Window *window) {
-  bitmap_layer_destroy(s_white_layer);
-  bitmap_layer_destroy(s_black_layer);
+  bitmap_layer_destroy(s_layer);
   text_layer_destroy(s_text_layer);
-  gbitmap_destroy(s_white_bitmap);
-  gbitmap_destroy(s_black_bitmap);
+  gbitmap_destroy(s_bitmap);
 }
 
 static void init(void) {
